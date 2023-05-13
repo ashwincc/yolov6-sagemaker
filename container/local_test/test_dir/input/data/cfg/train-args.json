@@ -1,0 +1,10 @@
+{
+   "DATASET": "/opt/ml/input/data/cfg/underwater_trash.yaml",
+   "CFG_PATH": "/opt/ml/input/data/cfg/yolov6s_finetune.py",
+   "NAME": "tutorial",
+   "IMG_SIZE": "640",
+   "EPOCHS": "2",
+   "BATCH": "32",
+   "DEVICE": 0 
+}
+

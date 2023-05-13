@@ -1,0 +1,43 @@
+#!/bin/bash
+# This is the main file which will be ran during sagemaker training.
+# train-args json file has only required and minimal args.
+
+
+args_file="/opt/ml/input/data/cfg/train-args.json"
+dataset=$(cat $args_file | jq -r '.DATASET')
+cfg_path=$(cat $args_file | jq -r '.CFG_PATH')
+device=$(cat $args_file | jq -r '.DEVICE')
+img_size=$(cat $args_file | jq -r '.IMG_SIZE')
+batch=$(cat $args_file | jq -r '.BATCH')
+epochs=$(cat $args_file | jq -r '.EPOCHS')
+name=$(cat $args_file | jq -r '.NAME')
+
+echo -e "\nDataset path: "$dataset
+echo "Model Configuration: "$cfg_path
+echo "Training device: "$device
+echo "Image Size: "$img_size
+echo "Batch size: "$batch
+echo "Number of training epochs: "$epochs
+echo "Experiment name: "$name
+
+
+
+echo -e "\nInitiating Training..."
+
+python3 /opt/YOLOv6/tools/train.py \
+            --img-size $img_size \
+            --conf-file $cfg_path \
+            --data-path $dataset \
+            --epochs $epochs \
+            --batch-size $batch \
+            --device $device \
+            --name $name
+
+echo -e "\nCopying model artifcats..."
+cp -r /opt/YOLOv6/runs/train/$name/weights/best_ckpt.pt /opt/ml/model/
+
+echo -e "\nCopying training outputs..."
+cp -r /opt/YOLOv6/runs/train/$name/ /opt/ml/output
+
+echo -e "\nTraining Completed Successfully"
+
