@@ -1,5 +1,5 @@
 #!/bin/bash
-image='yolov6s-sagemaker-training'
+image="yolov6s-sagemaker-training:$(date '+%Y-%m-%d')"
 if [ "$image" == "" ]
 then
     echo "Usage: $0 <image-name>"
@@ -7,11 +7,11 @@ then
 fi
 account=$(aws sts get-caller-identity --query Account --output text)
 region=$(aws configure get region)
-fullname="${account}.dkr.ecr.${region}.amazonaws.com/${image}:latest"
+fullname="${account}.dkr.ecr.${region}.amazonaws.com/${image}"
 
-echo 'ImageName:'$fullname
+echo 'ImageName: '$fullname
 
-aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin 763104351884.dkr.ecr.us-east-1.amazonaws.com
+aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin 763104351884.dkr.ecr.${region}.amazonaws.com
 base_img='763104351884.dkr.ecr.'$region'.amazonaws.com/pytorch-training:2.0.0-gpu-py310-cu118-ubuntu20.04-ec2'
 echo 'base_img:'$base_img
 
@@ -22,7 +22,7 @@ echo 'Building docker image..'
 docker build -t ${image} -f Dockerfile --build-arg BASE_IMG=$base_img .
 docker tag ${image} ${fullname}
 
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${account}.dkr.ecr.us-east-1.amazonaws.com
+aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${account}.dkr.ecr.${region}.amazonaws.com
 
 aws ecr describe-repositories --repository-names "${image}" > /dev/null 2>&1
 
@@ -33,4 +33,4 @@ fi
 
 docker push ${fullname}
 
-echo 'Successfully Built '${fullname} 'and pushed
+echo -e "\nSuccessfully Built ${fullname} and pushed."
