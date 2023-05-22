@@ -1,3 +1,4 @@
-container/local_test/test_dir/input/data/dataset
+container/local_test/test_dir/input/data/images
+container/local_test/test_dir/input/data/labels
 container/local_test/test_dir/input/data/weights
 container/local_test/test_dir/input/data/dataset.zip
