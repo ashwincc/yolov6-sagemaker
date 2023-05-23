@@ -1,21 +1,13 @@
 # yolov6-sagemaker
 This repo provides guide for training YOLOV6 with SageMaker.  
-There are two methods:  
 
-*   Using prebuilt container provided by AWS  
-*   Using custom training container  
----
-## Using prebuilt container provided by AWS
-For this method go through the aws_sm_yolov6.ipynb notebook.
-
----
-## Using custom training container
+## Custom training container
 Prerequisites  
   
 1) Docker  
 2) Aws cli 
 
-Steps to build and push custom container.  
+Steps to build and push custom container. For this example we are using yolov6s model.  
 
 *   Install aws cli tool
 
@@ -23,9 +15,9 @@ Steps to build and push custom container.
 # for debian based distros 
 sudo apt install awscli
 ``` 
-*   Create the api access key from your AWS security credential dashboard
+Create the api access key from your AWS security credential dashboard.  
 
-*   Configure the aws account with the API access id created
+Configure the aws account with the API access id created
 
 
 ```bash
@@ -37,29 +29,29 @@ aws configure
 ```
 <img src="imgs/aws_configure.png" alt="drawing" width="300"/>
 
-*   Login to access the DeepLearning Container image repository before pulling the image. Here are the list of <a href="https://github.com/aws/deep-learning-containers/blob/master/available_images.md">images</a>.
+Login to access the DeepLearning Container image repository before pulling the image. Here are the list of <a href="https://github.com/aws/deep-learning-containers/blob/master/available_images.md">images</a>.
 ```bash
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 763104351884.dkr.ecr.us-east-1.amazonaws.com
 #change the region as required
 ```
-*   Pull the Base Pytorch image
+Pull the Base Pytorch image
 ```bash
 docker pull 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:2.0.0-gpu-py310-cu118-ubuntu20.04-ec2
 ```
 
-*   Clone the repo
+Clone the repo
 ```bash
 git clone https://github.com/ashwincc/yolov6-sagemaker.git
 cd yolov6-sagemaker/container
 ```
 
-*   Login into your ecr 
+Login into your ecr 
 ```bash
 aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <account>.dkr.ecr.<region>.amazonaws.com
 ```
 
 
-*   Build the docker  image and tag.
+Build the docker  image and tag.
 
 ```bash
 REPO='yolov6s-sagemaker-training'
@@ -69,12 +61,15 @@ docker build . -t $YOLO_IMAGE
 docker tag $YOLO_IMAGE <account>.dkr.ecr.<region>.amazonaws.com/$YOLO_IMAGE
 ```
 
-*   Create the repository and push.
+Create the repository and push.
 ```bash
 aws ecr create-repository --repository-name $REPO
 
 docker push <account>.dkr.ecr.<region>.amazonaws.com/$YOLO_IMAGE
 ```
+
+### For using the custom container with sagemaker or testing it locally, please go through the main.ipynb notebook.  
+ 
 ---------------
 
 Todo:
