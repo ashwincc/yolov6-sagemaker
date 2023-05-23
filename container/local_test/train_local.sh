@@ -6,12 +6,12 @@ mkdir -p local_test/test_dir/input/data/cfg
 mkdir -p local_test/test_dir/input/data/weights
 
 #<----------------------------------------------->
-cd test_dir/input/data
+cd test_dir/input/
 wget https://www.dropbox.com/s/lbji5ho8b1m3op1/reduced_label_yolov6.zip?dl=1 -O dataset.zip
 
-unzip dataset.zip 
-
-mv reduced_label_yolov6/ dataset/
+unzip dataset.zip reduced_label_yolov6/images/* -d .
+unzip dataset.zip reduced_label_yolov6/labels/* -d .
+mv reduced_label_yolov6/* data/
 #<----------------------------------------------->
 
 !wget https://github.com/meituan/YOLOv6/releases/download/0.3.0/yolov6s.pt
