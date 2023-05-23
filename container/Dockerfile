@@ -13,6 +13,8 @@ RUN apt-get install jq -y
 
 RUN ldconfig -v
 
+# For example purpose we are cloning the repo directly, for custom usecase you might
+# want to change the source files and copy instead of cloning here.
 RUN cd /opt && git clone https://github.com/meituan/YOLOv6.git
 
 ENV PATH="/opt/YOLOv6:${PATH}"
